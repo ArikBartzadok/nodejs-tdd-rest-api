@@ -5,6 +5,8 @@ import postagens from './rotas/rotasPostagem';
 
 const app = express();
 
+app.use(express.json());
+
 app.use('/', padrao);
 app.use('/postagem/v1', postagens);
 
