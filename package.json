@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/ArikBartzadok/nodejs-tdd-rest-api#readme",
   "dependencies": {
+    "@sucrase/jest-plugin": "^2.2.0",
     "axios": "^0.24.0",
     "body-parser": "^1.19.0",
     "dotenv": "^10.0.0",
