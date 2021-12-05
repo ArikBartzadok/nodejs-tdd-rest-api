@@ -8,6 +8,10 @@ const obterPostagem = (id) => {
   return banco.oneOrNone('select * from blog.postagem where id = $1', [id]);
 };
 
+const obterPostagemPeloTitulo = (titulo) => {
+  return banco.oneOrNone('select * from blog.postagem where titulo = $1', [titulo]);
+};
+
 const inserirPostagem = (postagem) => {
   return banco.one('insert into blog.postagem (titulo, conteudo) values ($1, $2) returning *', [postagem.titulo, postagem.conteudo]);
 };
@@ -24,6 +28,7 @@ const removerPostagem = (id) => {
 export default {
   obterPostagens,
   obterPostagem,
+  obterPostagemPeloTitulo,
   inserirPostagem,
   alterarPostagem,
   removerPostagem

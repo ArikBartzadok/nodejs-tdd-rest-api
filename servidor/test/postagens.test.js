@@ -18,7 +18,8 @@ const requisicao = ({
   return axios({
     url,
     method: metodo,
-    data: dados
+    data: dados,
+    validateStatus: false
   });
 };
 
@@ -43,6 +44,7 @@ describe('Obter postagens.', () => {
       metodo: 'GET'
     });
     
+    expect(retorno.status).toBe(200);
     expect(retorno.data).toHaveLength(3);
   
     await servicoPostagem.removerPostagem(postagem1.id);
@@ -63,9 +65,30 @@ describe('Inserir postagens.', () => {
       dados: postagem
     });
     
+    expect(retorno.status).toBe(201);
     expect(retorno.data).toMatchObject(postagem);
   
     await servicoPostagem.removerPostagem(retorno.data.id);
+  });
+
+  it('Não deve inserir uma nova postagem com titulo duplicado', async () => {
+    const postagem = { titulo: gerardor(), conteudo: gerardor() };
+  
+    const retorno1 = await requisicao({
+      endpoint: '/postagem/v1/postagens',
+      metodo: 'POST',
+      dados: postagem
+    });
+    const retorno2 = await requisicao({
+      endpoint: '/postagem/v1/postagens',
+      metodo: 'POST',
+      dados: postagem
+    });
+    
+    expect(retorno1.status).toBe(201);
+    expect(retorno2.status).toBe(409);
+  
+    await servicoPostagem.removerPostagem(retorno1.data.id);
   });
 
 });
@@ -87,11 +110,25 @@ describe('Alterar postagens.', () => {
       dados: postagem
     });
 
+    expect(retorno.status).toBe(204);
+
     const postagemAlterada = await servicoPostagem.obterPostagem(postagem.id);
     
     expect(postagemAlterada).toMatchObject(postagem);
   
     await servicoPostagem.removerPostagem(postagem.id);
+  });
+
+  it('Não deve alterar uma postagem inexistente', async () => {
+    const postagem = { id: 1 };
+
+    const retorno = await requisicao({
+      endpoint: `/postagem/v1/postagens/${postagem.id}`,
+      metodo: 'PUT',
+      dados: postagem
+    });
+
+    expect(retorno.status).toBe(404);
   });
 
 });
@@ -109,9 +146,11 @@ describe('Remover postagens.', () => {
       metodo: 'DELETE'
     });
 
-    const verificacao = await servicoPostagem.obterPostagem(postagem.id);
+    expect(retorno.status).toBe(204);
+
+    const verificacao = await servicoPostagem.obterPostagens();
     
-    expect(verificacao).toBe(null);
+    expect(verificacao).toHaveLength(0);
   });
 
 });

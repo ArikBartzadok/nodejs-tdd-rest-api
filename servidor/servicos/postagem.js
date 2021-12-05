@@ -7,15 +7,19 @@ const obterPostagens = async () => {
 
 const obterPostagem = async (id) => {
   const retorno = await dadosPostagem.obterPostagem(id);
+  if (!retorno) throw new Error('Postagem não encontrada');
   return retorno;
 };
 
 const inserirPostagem = async (postagem) => {
+  const postagemExistente = await dadosPostagem.obterPostagemPeloTitulo(postagem.titulo);
+  if (postagemExistente) throw new Error('Postagem já cadastrada');
   const retorno = await dadosPostagem.inserirPostagem(postagem);
   return retorno;
 };
 
 const alterarPostagem = async (postagem) => {
+  await obterPostagem(postagem.id);
   const retorno = await dadosPostagem.alterarPostagem(postagem);
   return retorno;
 };
