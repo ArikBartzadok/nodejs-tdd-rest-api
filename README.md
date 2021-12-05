@@ -4,5 +4,3 @@
 ```sh
 docker-compose -f stack.yaml up
 ```
-
-// sucrase-node

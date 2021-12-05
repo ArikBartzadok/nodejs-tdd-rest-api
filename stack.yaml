@@ -9,6 +9,8 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: node-api
       POSTGRES_DB: blog
+    ports:
+      - "5432:5432"
 
   adminer:
     image: adminer

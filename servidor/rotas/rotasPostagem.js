@@ -2,13 +2,11 @@ import express from 'express';
 
 const roteador = express.Router();
 
+import postagem from '../servicos/postagem';
+
 roteador.get('/postagens', async (requisicao, resposta) => {
-  resposta.json([
-    {
-      id: 1,
-      titulo: 'teste',
-    }
-  ])
+  const retorno = await postagem.obterPostagens();
+  resposta.json(retorno);
 });
 roteador.get('/postagens/:id', async (requisicao, resposta) => {
 
